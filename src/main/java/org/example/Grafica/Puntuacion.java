@@ -1,6 +1,8 @@
 package org.example.Grafica;
 
-public class Puntuacion {
+import java.io.Serializable;
+
+public class Puntuacion implements Serializable {
 	private String user;
 	private int puntuacion;
 	public Puntuacion(String user,int puntuacion) {
@@ -10,6 +12,12 @@ public class Puntuacion {
 	public String toString() {
 		return String.valueOf(puntuacion);
 	}
-	
-	
+
+
+	public String getUser() {
+		return this.user;
+	}
+	public int getPuntuacion(){
+		return this.puntuacion;
+	}
 }

@@ -1,0 +1,3 @@
+Nombre: op, Puntuacion: 10
+Nombre: josorian, Puntuacion: 9
+Nombre: vbhjklñ´, Puntuacion: 4

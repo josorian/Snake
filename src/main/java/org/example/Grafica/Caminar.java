@@ -15,15 +15,17 @@ public class Caminar implements Runnable{
 			this.panel.avanzar();
 			this.panel.repaint();
 			try {
-				Thread.sleep(90);
+				Thread.sleep(80);
 			}catch(InterruptedException ex) {
 				Logger.getLogger(Caminar.class.getName()).log(Level.SEVERE,null,ex);
 			}
 		}
+
 		
 	}
 	public void parar() {
 		this.estado=false;
+
 	}
 
 

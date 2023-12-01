@@ -3,6 +3,10 @@ package org.example.Grafica;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -17,6 +21,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class IngresarUser extends JFrame {
 	private JTextField textField;
+
+	private final String SERVER_ADDRESS="127.0.0.1";
+	private final int SERVER=8888;
 	private Puntuacion puntuacion;
 	
 
@@ -53,11 +60,13 @@ public class IngresarUser extends JFrame {
 	        JButton btnNewButton = new JButton("Guardar");
 	        btnNewButton.addActionListener(new ActionListener() {
 	        	public void actionPerformed(ActionEvent e) {
-	        		puntuacion = new Puntuacion(getUser(),punt);
-	        		System.out.println(puntuacion.toString());
-	        		MenuPrincipal menu=new MenuPrincipal();
-	        		menu.setVisible(true);
-	        	}
+
+					puntuacion = new Puntuacion(getUser(),punt-2);
+					System.out.println(puntuacion.toString());
+					enviarPuntuacionAlServidor();
+
+
+				}
 	        });
 	        GroupLayout layout = new GroupLayout(getContentPane());
 	        layout.setHorizontalGroup(
@@ -91,6 +100,15 @@ public class IngresarUser extends JFrame {
 	        pack();
 	    }
 	    public String getUser() {
-	    	return this.textField.toString();
+	    	return this.textField.getText();
 	    }
+		private void enviarPuntuacionAlServidor(){
+			try(Socket socket = new Socket(SERVER_ADDRESS,SERVER);ObjectOutputStream outputStream=new ObjectOutputStream(socket.getOutputStream())){
+				outputStream.writeObject(puntuacion);
+				outputStream.flush();
+				System.out.println("Objero enviador al servidor");
+			} catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 }

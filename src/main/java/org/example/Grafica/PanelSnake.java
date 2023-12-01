@@ -34,6 +34,7 @@ public class PanelSnake extends JPanel {
         this.caminar=new Caminar(this);
         this.hilo = new Thread(caminar);
         this.hilo.start();
+
         
     }
     public void paint(Graphics pintor) {
@@ -67,9 +68,11 @@ public class PanelSnake extends JPanel {
     		}
     	}
     	if (existe) {
-    		IngresarUser user = new IngresarUser(this.snake.size());
-    		user.setVisible(true);
+
     		this.caminar.parar();
+
+			IngresarUser user = new IngresarUser(this.snake.size());
+			user.setVisible(true);
     	}else {
     		if(nuevo[0]==comida[0]&&nuevo[1]==comida[1]) {
     			this.snake.add(nuevo);
