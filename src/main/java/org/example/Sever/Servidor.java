@@ -28,7 +28,7 @@ public class Servidor {
     private static List<Puntuacion> puntuacionList;
 
     public static void main(String[] args) {
-        puntuacionList=parseXMLToList(new File("usuarios.xml"));
+        puntuacionList=parseXMLToList(new File("src/main/java/org/example/Sever/XML/usuarios.xml"));
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
             System.out.println("Servidor listo para recibir conexiones...");
 
@@ -91,7 +91,7 @@ public class Servidor {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new File("usuarios.xml"));
+            StreamResult result = new StreamResult(new File("src/main/java/org/example/Sever/XML/usuarios.xml"));
             transformer.transform(source, result);
 
             System.out.println("El archivo usuarios.xml ha sido creado correctamente.");
@@ -101,7 +101,7 @@ public class Servidor {
     }
     private static void enviarArchivoXML(ObjectOutputStream outputStream){
         try {
-            File xmlFile = new File("usuarios.xml");
+            File xmlFile = new File("src/main/java/org/example/Sever/XML/usuarios.xml");
             if(!xmlFile.exists()){
                 System.out.println("El archivo no existe");
                 return;
@@ -120,19 +120,21 @@ public class Servidor {
     }
     private static List<Puntuacion> parseXMLToList(File file){
         List<Puntuacion> puntuacions = new CopyOnWriteArrayList<>();
-        try{
-            SAXBuilder saxBuilder = new SAXBuilder();
-            org.jdom2.Document document = saxBuilder.build(file);
-            org.jdom2.Element rootElement = document.getRootElement();
-            List<org.jdom2.Element> puntuacionList = rootElement.getChildren("usuario");
-            for(org.jdom2.Element userElement: puntuacionList){
-                Puntuacion puntuacion = new Puntuacion(userElement.getChildText("nombre"),Integer.parseInt(userElement.getChildText("puntuacion")));
-                puntuacions.add(puntuacion);
+        if(file.exists()){
+            try{
+                SAXBuilder saxBuilder = new SAXBuilder();
+                org.jdom2.Document document = saxBuilder.build(file);
+                org.jdom2.Element rootElement = document.getRootElement();
+                List<org.jdom2.Element> puntuacionList = rootElement.getChildren("usuario");
+                for(org.jdom2.Element userElement: puntuacionList){
+                    Puntuacion puntuacion = new Puntuacion(userElement.getChildText("nombre"),Integer.parseInt(userElement.getChildText("puntuacion")));
+                    puntuacions.add(puntuacion);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (JDOMException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JDOMException e) {
-            throw new RuntimeException(e);
         }
         return puntuacions;
     }
