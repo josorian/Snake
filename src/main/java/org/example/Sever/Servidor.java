@@ -56,6 +56,7 @@ public class Servidor {
                         // Guardar la lista ordenada en XML
                         guardarPuntuacionEnXML(puntuacionList);
                     }
+                    inputStream.reset();
 
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
