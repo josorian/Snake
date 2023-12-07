@@ -3,7 +3,9 @@ package org.example.Sever;
 import org.example.Grafica.Puntuacion;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -56,7 +58,7 @@ public class Servidor {
                         // Guardar la lista ordenada en XML
                         guardarPuntuacionEnXML(puntuacionList);
                     }
-                    inputStream.reset();
+
 
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -72,7 +74,8 @@ public class Servidor {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
-
+            DOMImplementation domImplementation = document.getImplementation();
+            DocumentType documentType = domImplementation.createDocumentType("usuarios",null,"src\\main\\java\\org\\example\\Sever\\XML\\validador.dtd");
             Element rootElement = document.createElement("usuarios");
             document.appendChild(rootElement);
 
