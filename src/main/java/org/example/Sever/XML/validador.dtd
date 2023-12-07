@@ -1,6 +1,0 @@
-<!DOCTYPE usuarios [
-        <!ELEMENT usuarios (usuario+)>
-        <!ELEMENT usuario (nombre, puntuacion)>
-        <!ELEMENT nombre (#PCDATA)>
-        <!ELEMENT puntuacion (#PCDATA)>
-        ]>
