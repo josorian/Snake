@@ -22,7 +22,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class IngresarUser extends JFrame {
 	private JTextField textField;
 
-	private final String SERVER_ADDRESS="127.0.0.1";
+	private final String SERVER_ADDRESS="localhost";
 	private final int SERVER=8888;
 	private Puntuacion puntuacion;
 	

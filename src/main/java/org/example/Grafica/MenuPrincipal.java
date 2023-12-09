@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class MenuPrincipal extends JFrame{
-    private final String SERVER_ADDRESS="127.0.0.1";
+    private final String SERVER_ADDRESS="localhost";
     private final int SERVER=8888;
     public MenuPrincipal(){
         initCompoents();

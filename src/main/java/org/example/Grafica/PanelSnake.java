@@ -70,7 +70,7 @@ public class PanelSnake extends JPanel {
     	if (existe) {
 
     		this.caminar.parar();
-
+			//habre el panel para ingresar el nombre del usuario
 			IngresarUser user = new IngresarUser(this.snake.size());
 			user.setVisible(true);
     	}else {
