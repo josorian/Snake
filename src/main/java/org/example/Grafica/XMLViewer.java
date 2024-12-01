@@ -15,7 +15,7 @@ public class XMLViewer extends JFrame {
 
     private JTextArea textArea;
 
-    public XMLViewer() {
+    public XMLViewer(String nombre) {
         setTitle("Visor XML");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
@@ -34,9 +34,9 @@ public class XMLViewer extends JFrame {
 
         setJMenuBar(menuBar);
         add(scrollPane, BorderLayout.CENTER);
-        convertirXMLToText();
+        convertirXMLToText(nombre);
         // Carga automáticamente el contenido de un archivo XML al iniciar la aplicación
-        cargarArchivoAutomaticamente("puntuacion.txt"); // Reemplaza con la ruta de tu archivo XML
+        cargarArchivoAutomaticamente(nombre+".txt"); // Reemplaza con la ruta de tu archivo XML
     }
 
     private void abrirArchivo() {
@@ -74,15 +74,22 @@ public class XMLViewer extends JFrame {
         reader.close();
         return contenido.toString();
     }
-    private void convertirXMLToText(){
+    private void convertirXMLToText(String nombreF){
         try {
+            // Verificar si el archivo XML existe
+            File archivoXML = new File(nombreF+".xml");
+            if (!archivoXML.exists()) {
+                JOptionPane.showMessageDialog(this, "El archivo puntuacion.xml no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Si el archivo no existe, salir del método
+            }
+
             // Cargar el archivo XML
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File("puntuacion.xml"));
+            Document document = builder.parse(archivoXML);
 
             // Preparar el archivo de texto para escribir
-            BufferedWriter writer = new BufferedWriter(new FileWriter("puntuacion.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(nombreF+".txt"));
 
             // Obtener la lista de nodos de usuario
             NodeList userList = document.getElementsByTagName("usuario");
@@ -90,12 +97,17 @@ public class XMLViewer extends JFrame {
             // Escribir cada usuario en una línea del archivo de texto
             for (int i = 0; i < userList.getLength(); i++) {
                 Element usuario = (Element) userList.item(i);
-                String nombre = usuario.getElementsByTagName("nombre").item(0).getTextContent();
-                String puntuacion = usuario.getElementsByTagName("puntuacion").item(0).getTextContent();
 
-                // Escribir el usuario en una línea del archivo de texto
-                writer.write("Nombre: " + nombre + ", Puntuacion: " + puntuacion);
-                writer.newLine();
+                // Obtener el atributo 'nombre' y 'puntuacion'
+                String nombre = usuario.getAttribute("nombre");
+                String puntuacion = usuario.getAttribute("puntuacion");
+
+                // Verificar si los atributos no son nulos
+                if (nombre != null && puntuacion != null) {
+                    // Escribir el usuario en una línea del archivo de texto
+                    writer.write("Nombre: " + nombre + ", Puntuacion: " + puntuacion);
+                    writer.newLine();
+                }
             }
 
             // Cerrar el escritor
@@ -106,4 +118,5 @@ public class XMLViewer extends JFrame {
             e.printStackTrace();
         }
     }
+
 }

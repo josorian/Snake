@@ -5,6 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -13,6 +24,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
+
+import org.example.Sever.Servidor;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -21,27 +35,19 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class Vista extends JFrame {
 	private PanelSnake panel;
-	private JLabel puntuacion;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Vista frame = new Vista();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JLabel puntuacionLabel;
+	private String nombreUsuario;  // Recibido de la ventana VentanaNombre
+    private int score = 0;  // Puntuación actual
+    private final String SERVER_ADDRESS="localhost";
+    private final int SERVER=8888;
+    private String nombreSala;
 
 	/**
 	 * Create the frame.
 	 */
-	public Vista() {
+	public Vista(String nombreUsuario, String nombreSala) {
+        this.nombreUsuario = nombreUsuario;
+        this.nombreSala = nombreSala;
 		initCompoents();
 		this.setLocationRelativeTo(null);
 		panel= new PanelSnake(800,30);
@@ -72,29 +78,72 @@ public class Vista extends JFrame {
 		});
 		this.requestFocus(true);
 	}
-	private void initCompoents(){
+
+	private void initCompoents() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        puntuacion = new JLabel("Puntuación: ");
-        puntuacion.setHorizontalAlignment(SwingConstants.CENTER);
+        puntuacionLabel = new JLabel("Puntuación: 0");
+        puntuacionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         GroupLayout layout = new GroupLayout(getContentPane());
         layout.setHorizontalGroup(
-        	layout.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(layout.createSequentialGroup()
-        			.addContainerGap(833, Short.MAX_VALUE)
-        			.addComponent(puntuacion, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
-        			.addGap(40))
+            layout.createParallelGroup(Alignment.TRAILING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap(833, Short.MAX_VALUE)
+                    .addComponent(puntuacionLabel, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
+                    .addGap(40))
         );
         layout.setVerticalGroup(
-        	layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(layout.createSequentialGroup()
-        			.addGap(85)
-        			.addComponent(puntuacion)
-        			.addContainerGap(744, Short.MAX_VALUE))
+            layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(85)
+                    .addComponent(puntuacionLabel)
+                    .addContainerGap(744, Short.MAX_VALUE))
         );
         getContentPane().setLayout(layout);
         pack();
     }
-	public void actualizarPuntuacion(int puntuacion) {
-		this.puntuacion.setText("Puntuacion: "+puntuacion);
-	}
+
+    public void actualizarPuntuacion(int nuevaPuntuacion) {
+        this.score = nuevaPuntuacion;  // Actualizamos la variable interna
+        this.puntuacionLabel.setText("Puntuación: " + nuevaPuntuacion);
+    }
+
+    public int getPuntuacion() {
+        return score;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public  void guardarPuntuacion() {
+        // Obtener la puntuación final y el nombre del usuario
+        int puntuacionFinal = this.getPuntuacion();
+        String nombre = this.getNombreUsuario();
+        
+
+        // Crear el objeto Puntuacion
+        Puntuacion puntuacion = new Puntuacion(nombre, puntuacionFinal,nombreSala);
+
+        try(Socket s = new Socket(SERVER_ADDRESS,SERVER);
+        	ObjectOutputStream o = new ObjectOutputStream(s.getOutputStream());
+        		ObjectInputStream in = new ObjectInputStream(s.getInputStream())){
+        	
+        	o.writeObject("addPuntuacion");
+        	o.writeObject(puntuacion);
+        	o.flush();
+        	o.writeObject("mostrarPuntuaciones");
+        	o.writeObject(nombreSala);
+        	o.flush();
+        	
+        
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
+    }
+    
+
 }

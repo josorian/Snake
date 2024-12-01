@@ -68,11 +68,9 @@ public class PanelSnake extends JPanel {
     		}
     	}
     	if (existe) {
-
+    		observer.guardarPuntuacion();
     		this.caminar.parar();
-			//habre el panel para ingresar el nombre del usuario
-			IngresarUser user = new IngresarUser(this.snake.size());
-			user.setVisible(true);
+			
     	}else {
     		if(nuevo[0]==comida[0]&&nuevo[1]==comida[1]) {
     			this.snake.add(nuevo);
@@ -91,6 +89,7 @@ public class PanelSnake extends JPanel {
     		if(parte[0]==a && parte[1]==b) {
     			existe=true;
     			generarFrutas();
+    			this.notificarCambioSnake();
     			break;
     		}
     	}

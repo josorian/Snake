@@ -14,6 +14,7 @@ import java.net.Socket;
 public class MenuPrincipal extends JFrame{
     private final String SERVER_ADDRESS="localhost";
     private final int SERVER=8888;
+    private String nombreUsuario;
     public MenuPrincipal(){
         initCompoents();
     }
@@ -31,14 +32,13 @@ public class MenuPrincipal extends JFrame{
     }
     private void initCompoents(){
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         JButton btnJugar = new JButton("Play");
         btnJugar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
                         try {
-                            Vista frame = new Vista();
+                            VentanaNombre frame = new VentanaNombre();
                             frame.setVisible(true);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -53,6 +53,7 @@ public class MenuPrincipal extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 try(Socket socket = new Socket(SERVER_ADDRESS,SERVER); ObjectOutputStream outputStream=new ObjectOutputStream(socket.getOutputStream()); ObjectInputStream objectInputStream=new ObjectInputStream(socket.getInputStream())){
                     outputStream.writeObject("mostrarPuntuaciones");
+                    outputStream.writeObject("global.xml");
                     outputStream.flush();
                     Object o = objectInputStream.readObject();
                     if(o instanceof byte[]){
@@ -64,7 +65,7 @@ public class MenuPrincipal extends JFrame{
                     } else {
                         System.out.println("Respuesta inesperada del servidor.");
                     }
-                    XMLViewer viewer = new XMLViewer();
+                    XMLViewer viewer = new XMLViewer("global");
                     viewer.setVisible(true);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
