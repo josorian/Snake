@@ -21,6 +21,9 @@ public class PanelSnake extends JPanel {
     Thread hilo;
     Caminar caminar;
     private Vista observer;
+    // Constructor
+    // Precondición: `tamanoMax` y `cantidad` deben ser mayores que 0.
+    // Poscondición: Se inicializa el estado inicial de la serpiente, se genera la primera fruta y se inicia el hilo de movimiento.
     public PanelSnake(int tamanoMax,int cantidad) {
         this.tamanoMax=tamanoMax;
         this.cantidad=cantidad;
@@ -37,6 +40,9 @@ public class PanelSnake extends JPanel {
 
         
     }
+    // Método paint
+    // Precondición: El objeto `Graphics pintor` no debe ser nulo.
+    // Poscondición: Dibuja la serpiente y la fruta en el panel.
     public void paint(Graphics pintor) {
         super.paint(pintor);
         pintor.setColor(colorSnake);
@@ -47,6 +53,9 @@ public class PanelSnake extends JPanel {
         pintor.fillRect(this.res/2+this.comida[0]*this.tamano,this.res/2+this.comida[1]*this.tamano,this.tamano-1,this.tamano-1);
 
     }
+    // Método avanzar
+    // Precondición: La lista `snake` debe estar inicializada con al menos un segmento.
+    // Poscondición: La serpiente avanza en la dirección indicada. Si colisiona consigo misma, el juego se detiene. Si come la fruta, crece.
     public void avanzar() {
     	notificarCambioSnake();
     	igualarDir();
@@ -81,6 +90,10 @@ public class PanelSnake extends JPanel {
     		}
     	}    	
     }
+
+    // Método generarFrutas
+    // Precondición: La lista `snake` debe estar inicializada y contener la posición actual de la serpiente.
+    // Poscondición: Se genera una nueva fruta en una posición aleatoria que no esté ocupada por la serpiente.
     public void generarFrutas() {
     	boolean existe=false;
     	int a = (int)(Math.random()*this.cantidad);
@@ -99,6 +112,9 @@ public class PanelSnake extends JPanel {
     	}
 
     }
+    // Método cambiarDireccion
+    // Precondición: `dir` debe ser un valor válido ("de", "iz", "ar", "ab").
+    // Poscondición: Cambia la dirección próxima de la serpiente si es válida (no contradice la dirección actual).
     public void cambiarDireccion(String dir) {
     	if((this.direccion.equals("de")||this.direccion.equals("iz"))&&(dir.equals("ar")||dir.equals("ab"))) {
         	this.direccionProxima=dir;
@@ -108,12 +124,21 @@ public class PanelSnake extends JPanel {
     	}
     	
     }
+    // Método igualarDir
+    // Precondición: Ninguna.
+    // Poscondición: La dirección actual de la serpiente se actualiza a la dirección próxima.
     public void igualarDir() {
     	this.direccion=this.direccionProxima;
     }
+    // Método setObserver
+    // Precondición: El parámetro `observer` no debe ser nulo.
+    // Poscondición: Se asigna el observador para manejar actualizaciones de puntuación.
     public void setObserver(Vista observer) {
         this.observer = observer;
     }
+    // Método notificarCambioSnake
+    // Precondición: El observador (observer) debe estar configurado.
+    // Poscondición: Informa al observador del cambio en la longitud de la serpiente.
     private void notificarCambioSnake() {
         if (observer != null) {
             observer.actualizarPuntuacion(snake.size()-2);

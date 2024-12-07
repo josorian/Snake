@@ -16,11 +16,9 @@ import org.example.Grafica.XMLViewer;
 public class ServidorMostrarHilo implements Runnable {
 
 	private Socket socket;
-	private String id;
 	private String direccion;
-	public ServidorMostrarHilo (Socket socket,String id,String direccion) {
+	public ServidorMostrarHilo (Socket socket,String direccion) {
 		this.socket = socket;
-		this.id=id;
 		this.direccion=direccion;
 	}
 	@Override
@@ -28,7 +26,7 @@ public class ServidorMostrarHilo implements Runnable {
 		try(DataInputStream dis = new DataInputStream(socket.getInputStream())){
 			String nombre = dis.readLine();
 			System.out.println(nombre);
-	       try(FileOutputStream fileOutputStream = new FileOutputStream(direccion +nombre +id+".xml")){
+	       try(FileOutputStream fileOutputStream = new FileOutputStream(direccion +nombre +".xml")){
 	    	   byte[] buffer = new byte[1028];
                int bytesLeidos;
                while((bytesLeidos=dis.read(buffer))!=-1) {
@@ -39,14 +37,10 @@ public class ServidorMostrarHilo implements Runnable {
                System.out.println("Archivo XML recibido del servidor.");
            
                SwingUtilities.invokeLater(() -> {
-            	    XMLViewer viewer = new XMLViewer(direccion+nombre+id);
+            	    XMLViewer viewer = new XMLViewer(nombre);
             	    viewer.setVisible(true);
             	});
 	       }
-			
-
-		                
-	 			
 	             
 	 		} catch (IOException e1) {
 				// TODO Auto-generated catch block

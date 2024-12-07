@@ -7,11 +7,18 @@ public class Caminar implements Runnable {
     private PanelSnake panel;
     private boolean estado = true;
 
+    // Constructor que inicializa el panel asociado.
+    // Precondición: Se debe proporcionar un objeto PanelSnake no nulo.
+    // Poscondición: La instancia queda asociada al panel proporcionado y lista para ejecutarse.
     public Caminar(PanelSnake panel) {
         this.panel = panel;
     }
 
     @Override
+    // Precondición: Este método debe ser invocado dentro de un hilo separado.
+    //              El objeto PanelSnake debe estar correctamente inicializado.
+    // Poscondición: Actualiza el panel periódicamente mientras `estado` sea true.
+    //              Si el hilo es interrumpido, el bucle se detiene.
     public void run() {
         while (estado) {
             try {

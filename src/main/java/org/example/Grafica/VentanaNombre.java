@@ -27,7 +27,9 @@ public class VentanaNombre extends JFrame {
             }
         });
     }
-
+    // Constructor de la ventana
+    // Precondición: Ninguna.
+    // Poscondición: Inicializa la ventana con campos de texto y botones para el ingreso del nombre.
     public VentanaNombre() {
         setTitle("Ingresar Nombre");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,6 +54,8 @@ public class VentanaNombre extends JFrame {
         getContentPane().add(btnSalas);
         
         // Acción para cuando el usuario hace clic en "Aceptar"
+        // Precondición: El campo `textFieldNombre` no debe estar vacío.
+        // Poscondición: Si el nombre es válido, se crea una nueva instancia de `Vista` para iniciar el juego en modo "Single".
         btnAceptar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nombreUsuario = textFieldNombre.getText();
@@ -69,6 +73,9 @@ public class VentanaNombre extends JFrame {
                 }
             }
         });
+        // Acción para cuando el usuario hace clic en "Salas"
+        // Precondición: El campo `textFieldNombre` no debe estar vacío.
+        // Poscondición: Si el nombre es válido, se crea una nueva instancia de `VentanaSalas` para seleccionar una sala.
         btnSalas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nombreUsuario = textFieldNombre.getText();

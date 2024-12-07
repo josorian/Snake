@@ -42,9 +42,9 @@ public class Vista extends JFrame {
     private final int SERVER=8888;
     private String nombreSala;
 
-	/**
-	 * Create the frame.
-	 */
+	// Constructor de la vista del juego
+	// Precondición: El nombre de usuario y el nombre de la sala no deben ser nulos.
+	// Poscondición: Inicializa la ventana del juego con el panel de juego y los controles.
 	public Vista(String nombreUsuario, String nombreSala) {
         this.nombreUsuario = nombreUsuario;
         this.nombreSala = nombreSala;
@@ -58,6 +58,9 @@ public class Vista extends JFrame {
 		PanelFondo fondo = new PanelFondo(800,30);
 		getContentPane().add(fondo);
 		fondo.setBounds(10,10,800,800);
+        // Control de las teclas para mover la serpiente
+        // Precondición: El evento de tecla debe ser válido.
+        // Poscondición: Cambia la dirección de la serpiente según la tecla presionada.
 		this.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
@@ -78,7 +81,11 @@ public class Vista extends JFrame {
 		});
 		this.requestFocus(true);
 	}
-
+	
+	 // Método que inicializa los componentes visuales de la ventana.
+	 // Precondición: La ventana debe ser inicializada antes de ser mostrada.
+	 // Poscondición: Crea la interfaz gráfica con la etiqueta de puntuación y el layout adecuado.
+	
 	private void initCompoents() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         puntuacionLabel = new JLabel("Puntuación: 0");
@@ -102,20 +109,36 @@ public class Vista extends JFrame {
         getContentPane().setLayout(layout);
         pack();
     }
+	
+	 // Actualiza la puntuación mostrada en la interfaz.
+	 // Precondición: Se debe recibir una puntuación válida.
+	 // Poscondición: Actualiza la puntuación en la interfaz gráfica.
 
     public void actualizarPuntuacion(int nuevaPuntuacion) {
         this.score = nuevaPuntuacion;  // Actualizamos la variable interna
         this.puntuacionLabel.setText("Puntuación: " + nuevaPuntuacion);
     }
-
+    
+     // Obtiene la puntuación actual del jugador.
+     // Precondición: El objeto debe haber sido inicializado correctamente.
+     // Poscondición: Retorna la puntuación actual del jugador.
+     
     public int getPuntuacion() {
         return score;
     }
-
+    
+     // Obtiene el nombre del usuario.
+     // Precondición: El nombre del usuario debe estar disponible.
+     // Poscondición: Retorna el nombre del usuario.
+     
     public String getNombreUsuario() {
         return nombreUsuario;
     }
-
+    
+	 // Guarda la puntuación final del jugador en el servidor.
+	 // Precondición: El servidor debe estar disponible y el jugador debe tener una puntuación.
+	 // Poscondición: Envía la puntuación al servidor y la guarda en la base de datos.
+	 
     public  void guardarPuntuacion() {
         // Obtener la puntuación final y el nombre del usuario
         int puntuacionFinal = this.getPuntuacion();
@@ -133,11 +156,26 @@ public class Vista extends JFrame {
         	o.writeObject(puntuacion);
         	o.flush();
         	o.writeObject("mostrarPuntuaciones");
-        	o.writeObject(nombreSala);
+        	o.writeObject(nombreSala+".xml");
         	o.flush();
-        	
+        	Object ob = in.readObject();
+            if(ob instanceof byte[]){
+                byte[] buffer = (byte[]) ob;
+                FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/org/example/Sever/XML/global.xml");
+                fileOutputStream.write(buffer);
+                fileOutputStream.close();
+                System.out.println("Archivo XML recibido del servidor.");
+                XMLViewer viewer = new XMLViewer(nombreSala);
+                viewer.setVisible(true);
+            } else {
+                System.out.println("Respuesta inesperada del servidor.");
+            }
+
         
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

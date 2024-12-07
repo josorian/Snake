@@ -14,7 +14,9 @@ import java.io.*;
 public class XMLViewer extends JFrame {
 
     private JTextArea textArea;
-
+    // Constructor de la clase XMLViewer
+    // Precondición: El nombre proporcionado debe ser válido para cargar el archivo correspondiente.
+    // Poscondición: Inicializa la ventana con un área de texto y un menú, y carga el archivo XML correspondiente.
     public XMLViewer(String nombre) {
         setTitle("Visor XML");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +30,9 @@ public class XMLViewer extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Archivo");
         JMenuItem menuItem = new JMenuItem("Abrir");
+        // Acción para abrir un archivo
+        // Precondición: El archivo debe ser un XML válido y seleccionable.
+        // Poscondición: Abre el archivo XML seleccionado y muestra su contenido en el área de texto.
         menuItem.addActionListener(e -> abrirArchivo());
         menu.add(menuItem);
         menuBar.add(menu);
@@ -38,7 +43,9 @@ public class XMLViewer extends JFrame {
         // Carga automáticamente el contenido de un archivo XML al iniciar la aplicación
         cargarArchivoAutomaticamente(nombre+".txt"); // Reemplaza con la ruta de tu archivo XML
     }
-
+    // Método para abrir un archivo XML
+    // Precondición: El archivo debe ser seleccionado a través de un JFileChooser y debe ser un archivo XML válido.
+    // Poscondición: Lee el archivo seleccionado y muestra su contenido en el área de texto.
     private void abrirArchivo() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccionar archivo XML");
@@ -54,7 +61,9 @@ public class XMLViewer extends JFrame {
             }
         }
     }
-
+    // Método para cargar un archivo automáticamente en el área de texto
+    // Precondición: El archivo especificado debe existir en la ruta proporcionada.
+    // Poscondición: Lee el archivo automáticamente y muestra su contenido en el área de texto.
     private void cargarArchivoAutomaticamente(String rutaArchivo) {
         try {
             String contenido = leerArchivo(rutaArchivo);
@@ -64,6 +73,9 @@ public class XMLViewer extends JFrame {
         }
     }
 
+    // Método para leer el contenido de un archivo
+    // Precondición: El archivo debe existir en la ruta especificada y ser legible.
+    // Poscondición: Devuelve el contenido del archivo como una cadena de texto.
     private String leerArchivo(String rutaArchivo) throws IOException {
         StringBuilder contenido = new StringBuilder();
         BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo));
@@ -74,10 +86,14 @@ public class XMLViewer extends JFrame {
         reader.close();
         return contenido.toString();
     }
+    // Método para convertir el archivo XML a texto y guardarlo
+    // Precondición: El archivo XML debe existir y contener nodos <usuario> con los atributos "nombre" y "puntuacion".
+    // Poscondición: Convierte los datos XML en formato texto y guarda el resultado en un archivo de texto.
     private void convertirXMLToText(String nombreF){
         try {
             // Verificar si el archivo XML existe
-            File archivoXML = new File(nombreF+".xml");
+            File archivoXML = new File("src/main/java/org/example/Sever/XML/"+nombreF+".xml");
+            System.out.println("Ruta absoluta: " + archivoXML.getAbsolutePath());
             if (!archivoXML.exists()) {
                 JOptionPane.showMessageDialog(this, "El archivo puntuacion.xml no existe.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // Si el archivo no existe, salir del método

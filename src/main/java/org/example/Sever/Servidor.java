@@ -1,22 +1,8 @@
 package org.example.Sever;
 
-import org.example.Grafica.Puntuacion;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Servidor {
    

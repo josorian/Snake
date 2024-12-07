@@ -12,7 +12,7 @@ public class VentanaSalas extends JFrame {
     private JTextField txtCrearSala;
     private JButton btnCrearSala;
     private JButton btnUnirseSala;
-    private JButton btnIniciarJuego;  // Nuevo botón para iniciar el juego
+    private JButton btnIniciarJuego;  
     private String nombreUsuario;
     private final String SERVER_ADDRESS = "localhost";
     private final int SERVER_PORT = 8888;
@@ -26,9 +26,11 @@ public class VentanaSalas extends JFrame {
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
     
-    private Vista vistaJuego;  // Ventana principal del juego
+    private Vista vistaJuego;  
 
-
+    // Constructor de la ventana
+    // Precondición: El parámetro `usuario` no debe ser nulo ni vacío.
+    // Poscondición: Inicializa la ventana con elementos visuales para gestionar salas.
     public VentanaSalas(String usuario) {
         this.nombreUsuario = usuario;
         setTitle("Gestión de Salas");
@@ -46,7 +48,9 @@ public class VentanaSalas extends JFrame {
         listaSalas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(listaSalas);
         scrollPane.setPreferredSize(new Dimension(300, 150));
-
+        // Botón para crear una sala
+        // Precondición: El campo `txtCrearSala` no debe estar vacío.
+        // Poscondición: Envía una solicitud al servidor para crear una nueva sala.
         btnCrearSala = new JButton("Crear Sala");
         btnCrearSala.addActionListener(new ActionListener() {
             @Override
@@ -70,7 +74,9 @@ public class VentanaSalas extends JFrame {
                 }
             }
         });
-
+        // Botón para unirse a una sala
+        // Precondición: Se debe seleccionar una sala de la lista.
+        // Poscondición: Envía una solicitud al servidor para unirse a la sala seleccionada.
         btnUnirseSala = new JButton("Unirse a Sala");
         btnUnirseSala.addActionListener(new ActionListener() {
             @Override
@@ -83,7 +89,7 @@ public class VentanaSalas extends JFrame {
                         outputStream.writeObject(nombreUsuario);
                         outputStream.flush();
 
-                        
+                        JOptionPane.showMessageDialog(VentanaSalas.this, "Sala unido: " + salaNombre);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         JOptionPane.showMessageDialog(VentanaSalas.this, "Error al unirse a la sala.");
@@ -94,7 +100,9 @@ public class VentanaSalas extends JFrame {
             }
         });
 
-        // Crear el botón "Iniciar Juego"
+        // Botón para iniciar el juego
+        // Precondición: Se debe seleccionar una sala de la lista.
+        // Poscondición: Abre la ventana principal del juego y cierra esta ventana.        
         btnIniciarJuego = new JButton("Iniciar Juego");
         btnIniciarJuego.addActionListener(new ActionListener() {
             @Override
@@ -117,11 +125,12 @@ public class VentanaSalas extends JFrame {
         panel.add(btnCrearSala);
         panel.add(btnUnirseSala);
         panel.add(scrollPane);
-        panel.add(btnIniciarJuego);  // Agregar el botón "Iniciar Juego" al panel
-
+        panel.add(btnIniciarJuego);  
         getContentPane().add(panel);
 
-        // Establecer la conexión al servidor cuando se abre la ventana
+        // Establecer conexión al servidor
+        // Precondición: El servidor debe estar en ejecución en `SERVER_ADDRESS` y `SERVER_PORT`.
+        // Poscondición: Se conecta al servidor y comienza a recibir actualizaciones de salas.
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -178,7 +187,9 @@ public class VentanaSalas extends JFrame {
         
         
 
-        // Cerrar el socket cuando se cierre la ventana
+        // Cerrar la conexión al cerrar la ventana
+        // Precondición: La conexión debe estar abierta.
+        // Poscondición: Libera los recursos de red utilizados.
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {

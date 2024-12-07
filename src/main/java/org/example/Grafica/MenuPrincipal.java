@@ -34,6 +34,8 @@ public class MenuPrincipal extends JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JButton btnJugar = new JButton("Play");
         btnJugar.addActionListener(new ActionListener() {
+        	// Precondición: La clase `VentanaNombre` debe estar implementada y ser accesible.
+            // Poscondición: Se abre una nueva ventana para ingresar el nombre del jugador.
             public void actionPerformed(ActionEvent e) {
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
@@ -50,6 +52,10 @@ public class MenuPrincipal extends JFrame{
 
         JButton btnPuntuacion = new JButton("Puntuaciones");
         btnPuntuacion.addActionListener(new ActionListener() {
+            // Precondición: El servidor debe estar corriendo en la dirección y puerto especificados.
+            //               Debe existir un archivo "global.xml" en el servidor.
+            // Poscondición: Se recibe el archivo XML del servidor, se guarda localmente,
+            //               y se abre un visor de XML para mostrar las puntuaciones.
             public void actionPerformed(ActionEvent e) {
                 try(Socket socket = new Socket(SERVER_ADDRESS,SERVER); ObjectOutputStream outputStream=new ObjectOutputStream(socket.getOutputStream()); ObjectInputStream objectInputStream=new ObjectInputStream(socket.getInputStream())){
                     outputStream.writeObject("mostrarPuntuaciones");
@@ -58,7 +64,7 @@ public class MenuPrincipal extends JFrame{
                     Object o = objectInputStream.readObject();
                     if(o instanceof byte[]){
                         byte[] buffer = (byte[]) o;
-                        FileOutputStream fileOutputStream = new FileOutputStream("puntuacion.xml");
+                        FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/org/example/Sever/XML/global.xml");
                         fileOutputStream.write(buffer);
                         fileOutputStream.close();
                         System.out.println("Archivo XML recibido del servidor.");

@@ -16,10 +16,9 @@ public class ServidorMostror {
  public static void main(String[] args) {
 	 try(ServerSocket server = new ServerSocket(9999);){
  		while(true) {
- 			String id = UUID.randomUUID().toString();
 
  			Socket socket = server.accept();
- 	 		new Thread(new ServidorMostrarHilo(socket,id,direccion)).start();
+ 	 		new Thread(new ServidorMostrarHilo(socket,direccion)).start();
  		}
 		 
 } catch (IOException e1) {

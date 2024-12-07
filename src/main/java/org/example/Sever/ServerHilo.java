@@ -5,14 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.management.NotCompliantMBeanException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -62,9 +60,10 @@ public class ServerHilo implements Runnable {
 
                             Sala s = encontrarSalaPorNombre(nombre);
                             if (s==null) {
-                                enviarArchivoXML(outputStream, nombre);
+                                enviarArchivoXML(outputStream,nombre);
 
                             }else {
+                            	outputStream.writeObject("SALAS");
                             	s.setMaxJugadores();
                             	if(s.getMaxJugadores()==0) {
                                 	s.mostrarPuntuacionesATodos(s.getNombre());
